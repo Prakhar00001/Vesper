@@ -1,3 +1,4 @@
+from typing import List
 from tools.search import SearchEngine
 from models import ResearchState, EvidenceItem
 
