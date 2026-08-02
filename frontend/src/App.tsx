@@ -9,7 +9,7 @@ export function App(): React.JSX.Element {
   const [topic, setTopic] = useState<string>('');
   const [provider, setProvider] = useState<string>('openai');
   const [model, setModel] = useState<string>('gpt-4o');
-  const { logs, currentNode, report, isDone, startResearch } = useResearchSocket();
+  const { logs, currentNode, report, startResearch } = useResearchSocket();
 
   const handleStart = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

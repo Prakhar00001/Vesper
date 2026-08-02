@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Download, Copy, Share2 } from 'lucide-react';
+import { Download, Copy} from 'lucide-react';
 
 export const ReportViewer: React.FC<{ report: string; topic: string }> = ({ report, topic }) => {
   const handleCopy = () => {
