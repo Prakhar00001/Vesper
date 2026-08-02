@@ -1,8 +1,26 @@
-# Virtual environment
+# Virtual environments
 venv/
 .venv/
+backend/venv/
+backend/.venv/
+
+# Node dependencies
+node_modules/
+package-lock.json
+
+# Local database and cache
+*.db
+*.sqlite
+*.sqlite3
+vesper_memory.db
+backend/vesper_memory.db
 __pycache__/
 *.pyc
 
-# Environment variables
+# Environment files
 .env
+backend/.env
+
+# Build outputs
+dist/
+build/
