@@ -5,16 +5,28 @@ import { ActivityFeed } from './components/ActivityFeed';
 import { ReportViewer } from './components/ReportViewer';
 import { Sparkles, Search } from 'lucide-react';
 
-export function App() {
-  const [topic, setTopic] = useState('');
-  const [provider, setProvider] = useState('openai');
-  const [model, setModel] = useState('gpt-4o');
+export function App(): React.JSX.Element {
+  const [topic, setTopic] = useState<string>('');
+  const [provider, setProvider] = useState<string>('openai');
+  const [model, setModel] = useState<string>('gpt-4o');
   const { logs, currentNode, report, isDone, startResearch } = useResearchSocket();
 
-  const handleStart = (e: React.FormEvent) => {
+  const handleStart = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!topic.trim()) return;
     startResearch(topic, provider, model);
+  };
+
+  const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTopic(e.target.value);
+  };
+
+  const handleProviderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedProvider = e.target.value;
+    setProvider(selectedProvider);
+    if (selectedProvider === 'google') setModel('gemini-1.5-pro');
+    else if (selectedProvider === 'groq') setModel('llama-3.3-70b-versatile');
+    else setModel('gpt-4o');
   };
 
   return (
@@ -29,35 +41,45 @@ export function App() {
         </p>
       </header>
 
-      <form onSubmit={handleStart} className="w-full max-w-2xl bg-surface border border-border p-3 rounded-2xl flex gap-3 shadow-2xl">
+      <form
+        onSubmit={handleStart}
+        className="w-full max-w-2xl bg-surface border border-border p-3 rounded-2xl flex gap-3 shadow-2xl"
+      >
         <div className="flex-1 flex items-center gap-2 px-3">
           <Search className="w-5 h-5 text-gray-400" />
           <input
             type="text"
             placeholder="Enter any complex research topic..."
             value={topic}
-            onChange={(e) => setTopic(e.target.value)}
+            onChange={handleTopicChange}
             className="w-full bg-transparent text-white focus:outline-none placeholder-gray-500 text-sm"
           />
         </div>
 
         <select
           value={provider}
-          onChange={(e) => setProvider(e.target.value)}
-          className="bg-border text-gray-300 text-xs rounded-xl px-2 focus:outline-none"
+          onChange={handleProviderChange}
+          className="bg-border text-gray-300 text-xs rounded-xl px-2 focus:outline-none cursor-pointer"
         >
-          <option value="openai">OpenAI</option>
-          <option value="google">Gemini</option>
-          <option value="groq">Groq</option>
+          <option value="openai">OpenAI (GPT-4o)</option>
+          <option value="google">Gemini 1.5 Pro</option>
+          <option value="groq">Groq (Llama 3.3)</option>
         </select>
 
-        <button type="submit" className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm px-5 py-2.5 rounded-xl transition">
+        <button
+          type="submit"
+          className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm px-5 py-2.5 rounded-xl transition cursor-pointer"
+        >
           Research
         </button>
       </form>
 
       {currentNode && <ProgressTracker currentNode={currentNode} />}
-      {logs.length > 0 && <div className="w-full max-w-2xl my-4"><ActivityFeed logs={logs} /></div>}
+      {logs.length > 0 && (
+        <div className="w-full max-w-2xl my-4">
+          <ActivityFeed logs={logs} />
+        </div>
+      )}
       {report && <ReportViewer report={report} topic={topic} />}
     </div>
   );
